@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		
+		* {margin: 0; padding: 0;}
+
+		canvas {display: block; border: 2px solid #ccc; background-image: url(bg-screen.jpg); background-repeat: no-repeat;background-size: 100% 100%;}
+		#no {
+			display: none;	
+		}
+		#ball {
+			width: 150px;
+			height: 110px;
+			background-image: url(basket.png);
+			position:absolute;
+			top: 0px;
+			left: 0px;
+		}
+		#static {
+			width: 150px;
+			height: 150px;
+			background-image: url(static1.png);
+			position:relative;
+			margin-top: -170px;
+			top: 0px;
+			left: 0px;
+		}
+	</style>
+
+</head>
+<body>
+<div onload="game()" id="gameWindow">
+	<center>
+		<canvas id="c"></canvas>
+		<div id="ball"></div>
+		<div id="static"></div>
+		<div id="no">
+	    Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.    
+	    </div>
+	</center>
+</div>
+
+
+
+
+<script>
+	var c = document.getElementById("c");
+	var ctx = c.getContext("2d");
+
+	c.height = window.innerHeight-5;
+	var y_axis = window.innerWidth-5;
+	c.width = y_axis;
+	var x_axis = 0;
+	var x = 0;
+	var y = window.innerHeight;
+	x_axis = x;
+	y_axis = y;
+
+	var a, b, s = 0,temp;
+	var font_size = 10;
+	var columns = c.width/font_size;
+	var drops = [];
+	var imageObj = new Image();
+
+	for(var n = 0; n < columns; n++)
+		drops[n] = 1; 
+
+	function draw()
+	{
+
+		ctx.clearRect(0, 0, c.width, c.height);
+
+		for(var i = 0; i < drops.length; i+=6)
+		{
+			a = i*font_size;
+			b = drops[i]*font_size;
+
+			if (b >= (y_axis+76) && b <= (y_axis+110) && a >= (x_axis+75) && a <= (x_axis+85)) {
+					temp = a;
+					s++;
+					imageObj.src = 'ball1.png';
+
+			}
+			
+			ctx.drawImage(imageObj, a, b);
+			if (a != temp) {
+				imageObj.src = 'ball.png';
+			}
+			ctx.font = 'italic 70pt Calibri';
+      		ctx.fillText(s*10, c.width-90, 80);
+
+			ctx.font = 'italic 15pt Calibri';
+      		ctx.fillText("Discount coupon", c.width-145, 110);
+
+			if(drops[i]*font_size > c.height && Math.random() > 0.975)
+				drops[i] = 0;
+			
+			drops[i]++;
+		}
+	}
+
+	setInterval(draw, 20);
+
+
+	imageObj.src = 'ball.png';
+
+
+
+	
+		y=(y*6/10);
+
+	var vx = 0;
+
+	var ax = 0;
+
+	var delay = 10;
+	var vMultiplier = 0.5;
+
+	if (window.DeviceMotionEvent==undefined) {
+		document.getElementById("no").style.display="block";
+
+	} else {
+		window.ondevicemotion = function(event) {
+			ax = event.accelerationIncludingGravity.x;
+		}
+
+		setInterval(function() {
+			vx = vx + ax;
+
+			var ball = document.getElementById("ball");
+			x = parseInt(x + vx * vMultiplier);
+			
+			if (x<0) { x = 0; vx = 0; }
+			if (x>document.documentElement.clientWidth-160) { x = document.documentElement.clientWidth-160; vx = 0; }
+			x_axis = x;
+			y_axis = y;
+			ball.style.top = y + "px";
+			ball.style.left = x + "px";
+		}, delay);
+	}
+	var tempo;
+	tempo = setTimeout(alertFunc, 15000);
+	function alertFunc() {
+	    location.href = "final.html"
+	}
+</script>
+</body>
+</html>
