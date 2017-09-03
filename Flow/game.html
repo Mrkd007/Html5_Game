@@ -108,19 +108,16 @@
 					
 
 			}
-			if (temp == a && ytemp <= b) 
-			{
-				imageObj.src = 'ball1.png';
-			}
-			else
-			{
-				imageObj.src = 'ball.png';
-			}
 
+			
 			ctx.drawImage(imageObj, a, b);
 
 			ctx.font = 'italic 70pt Calibri';
-      		ctx.fillText(s + "0", c.width-90, 80);
+			if (s<10) {
+      		ctx.fillText(s + "0", c.width-120, 80);
+      		}
+      		else
+      			ctx.fillText(s + "0", c.width-145, 80);
 
 			ctx.font = 'italic 15pt Calibri';
       		ctx.fillText("Discount coupon", c.width-145, 110);
