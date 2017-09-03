@@ -10,7 +10,7 @@
 		#no {
 			display: none;	
 		}
-		#ball {
+		#basket {
 			width: 150px;
 			height: 110px;
 			background-image: url(basket.png);
@@ -34,7 +34,7 @@
 <div onload="game()" id="gameWindow">
 	<center>
 		<canvas id="c"></canvas>
-		<div id="ball"></div>
+		<div id="basket"></div>
 		<div id="static"></div>
 		<div id="no">
 	    Your browser does not support Device Orientation and Motion API. Try this sample with iPhone, iPod or iPad with iOS 4.2+.    
@@ -46,6 +46,30 @@
 
 
 <script>
+	function loadImages(sources, callback) {
+        var images = {};
+        var loadedImages = 0;
+        var numImages = 0;
+        // get num of sources
+        for(var src in sources) {
+          numImages++;
+        }
+        for(var src in sources) {
+          images[src] = new Image();
+          images[src].onload = function() {
+            if(++loadedImages >= numImages) {
+              callback(images);
+            }
+          };
+          images[src].src = sources[src];
+        }
+      }
+
+    var sources = {
+        black: 'ball.png',
+        blue: 'ball1.png'
+      };
+
 	var c = document.getElementById("c");
 	var ctx = c.getContext("2d");
 
@@ -77,19 +101,26 @@
 			a = i*font_size;
 			b = drops[i]*font_size;
 
-			if (b >= (y_axis+85) && b <= (y_axis+95) && a >= (x_axis+75) && a <= (x_axis+85)) {
+			if (b >= (y_axis+85) && b <= (y_axis+95) && a >= (x_axis+55) && a <= (x_axis+95)) {
 					temp = a;
+					var ytemp = b;
 					s++;
-					imageObj.src = 'ball1.png';
+					
 
 			}
-			
-			ctx.drawImage(imageObj, a, b);
-			if (a != temp) {
+			if (temp == a && ytemp <= b) 
+			{
+				imageObj.src = 'ball1.png';
+			}
+			else
+			{
 				imageObj.src = 'ball.png';
 			}
+
+			ctx.drawImage(imageObj, a, b);
+
 			ctx.font = 'italic 70pt Calibri';
-      		ctx.fillText(s*10, c.width-90, 80);
+      		ctx.fillText(s + "0", c.width-90, 80);
 
 			ctx.font = 'italic 15pt Calibri';
       		ctx.fillText("Discount coupon", c.width-145, 110);
@@ -115,8 +146,8 @@
 
 	var ax = 0;
 
-	var delay = 10;
-	var vMultiplier = 0.5;
+	var delay = 1;
+	var vMultiplier = 2;
 
 	if (window.DeviceMotionEvent==undefined) {
 		document.getElementById("no").style.display="block";
@@ -129,15 +160,16 @@
 		setInterval(function() {
 			vx = vx + ax;
 
-			var ball = document.getElementById("ball");
-			x = parseInt(x + vx * vMultiplier);
+			var basket = document.getElementById("basket");
+			x = parseInt(vx * vMultiplier);
 			
 			if (x<0) { x = 0; vx = 0; }
 			if (x>document.documentElement.clientWidth-160) { x = document.documentElement.clientWidth-160; vx = 0; }
 			x_axis = x;
 			y_axis = y;
-			ball.style.top = y + "px";
-			ball.style.left = x + "px";
+			document.getElementById("static").innerHTML = " " + x;
+				basket.style.top = y + "px";
+				basket.style.left = x + "px";
 		}, delay);
 	}
 	var tempo;
